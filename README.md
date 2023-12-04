@@ -18,7 +18,7 @@ Available at: localhost:8081/v1/images
 ```bash
 docker build -t komentar .   
 docker images
-docker run komentar    
+docker run -p 8081:8081 komentar    
 docker tag komentar rso/komentar   
 docker push rso/komentar  
 ```
