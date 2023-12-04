@@ -41,4 +41,4 @@ jobs:
         with:
           file: Dockerfile_with_maven_build
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/rso:${{ steps.time.outputs.time }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/rso_komentar:${{ steps.time.outputs.time }}
