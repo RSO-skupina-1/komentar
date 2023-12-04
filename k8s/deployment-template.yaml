@@ -13,7 +13,7 @@ spec:
         app: komentar
     spec:
       containers:
-        - image: rso/komentar #to be changed
+        - image: prelog/rso_komentar #to be changed
           name: komentar
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
