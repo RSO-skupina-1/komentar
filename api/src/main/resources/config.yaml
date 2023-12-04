@@ -1,0 +1,26 @@
+kumuluzee:
+  name: komentar-service
+  env:
+    name: dev
+  version: 1.0.0
+  server:
+    base-url: http://localhost:8081
+    http:
+      port: 8081
+  datasources:
+    - jndi-name: jdbc/KomentarDS
+      connection-url: jdbc:postgresql://ep-ancient-fog-19741782-pooler.eu-central-1.aws.neon.tech/izletnik
+      username: grzin
+      password: ep2sMLqtu3rk
+  health:
+    checks:
+      data-source-health-check:
+        type: liveness
+        jndi-name: jdbc/KomentarDS
+  metrics:
+    web-instrumentation:
+      - name: destinacije-endpoint
+        url-pattern: /v1/komentar/*
+rest-properties:
+  broken: false
+
