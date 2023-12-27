@@ -30,8 +30,6 @@ public class KomentarEntity {
 
     @Column(name = "lokacija_id")
     private Integer lokacija_id;
-
-    // add columns: location (longitude, latitude), accessibility, infrastructure, price, activities
     @Column(name = "komentar")
     private String komentar;
 

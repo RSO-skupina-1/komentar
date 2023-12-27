@@ -8,11 +8,13 @@ public class KomentarConverter {
     public static Komentar toDto(KomentarEntity entity) {
 
         Komentar dto = new Komentar();
+        dto.setId(entity.getId());
         dto.setUstvarjen(entity.getUstvarjen());
         dto.setKomentar(entity.getKomentar());
         dto.setOcena(entity.getOcena());
         dto.setLokacija_id(entity.getLokacija_id());
         dto.setUser_id(entity.getUser_id());
+
 
 
         return dto;
