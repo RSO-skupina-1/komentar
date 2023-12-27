@@ -22,6 +22,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -108,52 +109,61 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
-    /*
-    @Operation(description = "Add image metadata.", summary = "Add metadata")
+    @Operation(description = "Add new comment from given user to a destination.", summary = "Add comment")
     @APIResponses({
             @APIResponse(responseCode = "201",
-                    description = "Metadata successfully added."
+                    description = "Comment successfully added."
             ),
             @APIResponse(responseCode = "405", description = "Validation error .")
     })
-    @Counted(name = "number_of_created_katalog_destinacij")
+    @Counted(name = "num_of_posted_comments")
     @POST
-    public Response createKomentar(@RequestBody(
-            description = "DTO object with destinacija metadata.",
-            required = true, content = @Content(
-            schema = @Schema(implementation = Komentar.class))) Komentar komentar) {
+    public Response postKomentarByDestinacija(@RequestBody(description = "DTO object with comment metadata and text",
+                                                           required = true,
+                                                           content = @Content(
+                                                                   schema = @Schema(implementation = Komentar.class)
+                                                           )) Komentar komentar) {
 
-        if ((komentar.getTitle() == null || komentar.getDescription() == null)) {
+        System.out.println(komentar.getUstvarjen());
+
+        if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        else {
-            komentar = komentarBean.createKomentar(komentar);
+
+        if(komentar.getUstvarjen() == null){
+            komentar.setUstvarjen(Instant.now());
         }
 
-        return Response.status(Response.Status.CONFLICT).entity(komentar).build();
+        System.out.println(komentar.getUstvarjen());
 
+        return Response.status(Response.Status.CONFLICT).entity(komentarBean.createKomentar(komentar)).build();
     }
-    */
 
-    @Operation(description = "Update metadata for an destinacija.", summary = "Update metadata")
+    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment")
     @APIResponses({
             @APIResponse(
                     responseCode = "200",
-                    description = "Metadata successfully updated."
+                    description = "Comment successfully updated."
             )
     })
     @PUT
-    @Counted(name = "number_of_updated_katalog_destinacij")
+    @Counted(name = "number_of_updated_comments")
     @Path("{komentarId}")
     public Response putImageMetadata(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("komentarId") Integer imageMetadataId,
+                                     @PathParam("komentarId") Integer komentarId,
                                      @RequestBody(
-                                             description = "DTO object with image metadata.",
+                                             description = "DTO object with comment.",
                                              required = true, content = @Content(
                                              schema = @Schema(implementation = Komentar.class)))
                                      Komentar komentar){
 
-        komentar = komentarBean.putKomentar(imageMetadataId, komentar);
+        System.out.println(komentar.getKomentar());
+
+        if(komentar.getUstvarjen() == null){
+            komentar.setUstvarjen(Instant.now());
+        }
+
+        komentar = komentarBean.putKomentar(komentarId, komentar);
 
         if (komentar == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -163,24 +173,26 @@ public class KomentarResource {
 
     }
 
-    @Operation(description = "Delete metadata for an destinacija.", summary = "Delete metadata")
+    @Operation(description = "Delete comment with given id.", summary = "Delete comment")
     @APIResponses({
             @APIResponse(
                     responseCode = "200",
-                    description = "Metadata successfully deleted."
+                    description = "Comment successfully deleted."
             ),
             @APIResponse(
                     responseCode = "404",
-                    description = "Not found."
+                    description = "Comment not found."
             )
     })
     @DELETE
     @Counted(name = "number_of_deleted_comments")
     @Path("{komentarId}")
-    public Response deleteKomentar(@Parameter(description = "Metadata ID.", required = true)
+    public Response deleteKomentar(@Parameter(description = "Comment ID.", required = true)
                                         @PathParam("komentarId") Integer komentarId){
 
         boolean deleted = komentarBean.deleteKomentar(komentarId);
+
+        System.out.println("Delete Comment with id " + komentarId + ".");
 
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();
