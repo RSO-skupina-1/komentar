@@ -1,5 +1,9 @@
 package si.fri.rso.komentar.api.v1.resources;
 
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
@@ -12,6 +16,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.json.JSONObject;
 import si.fri.rso.komentar.lib.Komentar;
 import si.fri.rso.komentar.services.beans.KomentarBean;
 
@@ -22,6 +27,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import java.util.logging.Logger;
@@ -122,9 +128,8 @@ public class KomentarResource {
                                                            required = true,
                                                            content = @Content(
                                                                    schema = @Schema(implementation = Komentar.class)
-                                                           )) Komentar komentar) {
+                                                           )) Komentar komentar) throws IOException {
 
-        System.out.println(komentar.getUstvarjen());
 
         if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -134,8 +139,27 @@ public class KomentarResource {
             komentar.setUstvarjen(Instant.now());
         }
 
-        System.out.println(komentar.getUstvarjen());
+        String text = komentar.getKomentar();
+        okhttp3.RequestBody body = okhttp3.RequestBody
+                .create(okhttp3.MediaType.get("application/x-www-form-urlencoded"), text);
 
+        Request request = new Request.Builder()
+                .url("https://api.apilayer.com/bad_words?censor_character=*")
+                .addHeader("apiKey", "VC7y8FdT1gEcdGuoOTZBWSBPN05mq4ds")
+                .post(body)
+                .build();
+
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+        Call call = client.newCall(request);
+        okhttp3.Response response1 = call.execute();
+
+        JSONObject jo = new JSONObject(response1.body().string());
+
+        komentar.setKomentar(jo.get("censored_content").toString());
+
+        // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
+        // bi bilo idealno za error prevention.
         return Response.status(Response.Status.CONFLICT).entity(komentarBean.createKomentar(komentar)).build();
     }
 
@@ -155,7 +179,7 @@ public class KomentarResource {
                                              description = "DTO object with comment.",
                                              required = true, content = @Content(
                                              schema = @Schema(implementation = Komentar.class)))
-                                     Komentar komentar){
+                                     Komentar komentar) throws IOException{
 
         System.out.println(komentar.getKomentar());
 
@@ -168,6 +192,25 @@ public class KomentarResource {
         if (komentar == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        String text = komentar.getKomentar();
+        okhttp3.RequestBody body = okhttp3.RequestBody
+                .create(okhttp3.MediaType.get("application/x-www-form-urlencoded"), text);
+
+        Request request = new Request.Builder()
+                .url("https://api.apilayer.com/bad_words?censor_character=*")
+                .addHeader("apiKey", "VC7y8FdT1gEcdGuoOTZBWSBPN05mq4ds")
+                .post(body)
+                .build();
+
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+
+        Call call = client.newCall(request);
+        okhttp3.Response response1 = call.execute();
+
+        JSONObject jo = new JSONObject(response1.body().string());
+
+        komentar.setKomentar(jo.get("censored_content").toString());
 
         return Response.status(Response.Status.NOT_MODIFIED).build();
 
