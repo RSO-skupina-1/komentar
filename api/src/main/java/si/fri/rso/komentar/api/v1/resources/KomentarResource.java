@@ -50,12 +50,11 @@ public class KomentarResource {
     protected UriInfo uriInfo;
 
     @Counted(name = "get_all_komentar_count")
-    @Operation(description = "Get all comments.", summary = "Get all metadata")
+    @Operation(description = "Get all comments.", summary = "Returns all comments present in the database.")
     @APIResponses({
             @APIResponse(responseCode = "200",
-                    description = "List of comments",
-                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY)),
-                    headers = {@Header(name = "X-Total-Count", description = "Number of objects in list")}
+                    description = "Array of comments",
+                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
             )})
     @GET
     public Response getKomentar() {
@@ -66,20 +65,24 @@ public class KomentarResource {
     }
 
 
-    @Operation(description = "Get metadata for a comment.", summary = "Get metadata for a comment")
+    @Operation(description = "Get comment by ID.", summary = "Returns comment with corresponding ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
-                    description = "Comments",
+                    description = "Successfully returns chosen comment.",
                     content = @Content(
                             schema = @Schema(implementation = Komentar.class))
-            )})
-
+            ),
+            @APIResponse(responseCode = "404",
+                    description = "Comment with given ID doesn't exist.")
+    })
     @GET
     @Path("/{komentarId}")
     public Response getKomentar(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("komentarId") Integer imageMetadataId) {
+                                     @PathParam("komentarId") Integer komentarId) {
 
-        Komentar komentar = komentarBean.getKomentar(imageMetadataId);
+        log.info("Get comment with id: " + komentarId);
+
+        Komentar komentar = komentarBean.getKomentar(komentarId);
 
         if (komentar == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -88,23 +91,47 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
+    @Operation(description = "Get comments by user ID.", summary = "Returns all comments posted by user with coresponding user ID.")
+    @APIResponses({
+            @APIResponse(responseCode = "200",
+                    description = "Successfully returns chosen users comments.",
+                    content = @Content(
+                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+            ),
+            @APIResponse(responseCode = "404",
+                    description = "User with given ID doesn't exist.")
+    })
     @GET
     @Path("user/{userId}")
     public Response getKomentarByUser(@Parameter(description = "User ID.", required = true)
                                  @PathParam("userId") Integer userId) {
 
+        log.info("Get all comments posted by user with id: " + userId);
+
         List<Komentar> komentar = komentarBean.getKomentarByUser(userId);
 
-        if (komentar == null) {
+        if (komentar == null || komentar.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
+    @Operation(description = "Get comments by destinacija ID.", summary = "Returns all comments posted under destinacija with coresponding destinacija ID.")
+    @APIResponses({
+            @APIResponse(responseCode = "200",
+                    description = "Successfully returns chosen destinations comments.",
+                    content = @Content(
+                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+            ),
+            @APIResponse(responseCode = "404",
+                    description = "Destinacija with given ID doesn't exist.")
+    })
     @GET
     @Path("destinacija/{destinacijaId}")
     public Response getKomentarByDestinacija(@Parameter(description = "Destinacija ID.", required = true)
                                  @PathParam("destinacijaId") Integer destinacijaId) {
+
+        log.info("Get all comments posted under destination with id: " + destinacijaId);
 
         List<Komentar> komentar = komentarBean.getKomentarByDestinacija(destinacijaId);
 
@@ -115,12 +142,17 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
+
     @Operation(description = "Add new comment from given user to a destination.", summary = "Add comment")
     @APIResponses({
             @APIResponse(responseCode = "201",
-                    description = "Comment successfully added."
+                    description = "Comment successfully added.",
+                    content = @Content(
+                            schema = @Schema(implementation = Komentar.class)
+                    )
             ),
-            @APIResponse(responseCode = "405", description = "Validation error .")
+            @APIResponse(responseCode = "405",
+                        description = "Either user ID or destinacija ID was not given")
     })
     @Counted(name = "num_of_posted_comments")
     @POST
@@ -130,6 +162,7 @@ public class KomentarResource {
                                                                    schema = @Schema(implementation = Komentar.class)
                                                            )) Komentar komentar) throws IOException {
 
+        log.info("Post new comment.");
 
         if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -160,16 +193,23 @@ public class KomentarResource {
 
         // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
         // bi bilo idealno za error prevention.
-        return Response.status(Response.Status.CONFLICT).entity(komentarBean.createKomentar(komentar)).build();
+        return Response.status(Response.Status.CREATED).entity(komentarBean.createKomentar(komentar)).build();
     }
 
-    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment")
+    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment with corresponding komentar ID.")
     @APIResponses({
             @APIResponse(
-                    responseCode = "200",
-                    description = "Comment successfully updated."
+                    responseCode = "201",
+                    description = "Comment successfully updated.",
+                    content = @Content(
+                            schema = @Schema(implementation = Komentar.class)
+                    )
+            ),
+            @APIResponse(
+                    responseCode = "404",
+                    description = "Comment with given komentar ID was not found, hence cannot be updated."
             )
-    })
+            })
     @PUT
     @Counted(name = "number_of_updated_comments")
     @Path("{komentarId}")
@@ -181,7 +221,7 @@ public class KomentarResource {
                                              schema = @Schema(implementation = Komentar.class)))
                                      Komentar komentar) throws IOException{
 
-        System.out.println(komentar.getKomentar());
+        log.info("Update comment.");
 
         if(komentar.getUstvarjen() == null){
             komentar.setUstvarjen(Instant.now());
@@ -212,19 +252,19 @@ public class KomentarResource {
 
         komentar.setKomentar(jo.get("censored_content").toString());
 
-        return Response.status(Response.Status.NOT_MODIFIED).build();
+        return Response.status(Response.Status.CREATED).build();
 
     }
 
-    @Operation(description = "Delete comment with given id.", summary = "Delete comment")
+    @Operation(description = "Delete comment with given id.", summary = "Delete comment with corresponding komentar ID.")
     @APIResponses({
             @APIResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "Comment successfully deleted."
             ),
             @APIResponse(
                     responseCode = "404",
-                    description = "Comment not found."
+                    description = "Comment with given comment ID was not found."
             )
     })
     @DELETE
@@ -233,9 +273,9 @@ public class KomentarResource {
     public Response deleteKomentar(@Parameter(description = "Comment ID.", required = true)
                                         @PathParam("komentarId") Integer komentarId){
 
-        boolean deleted = komentarBean.deleteKomentar(komentarId);
+        log.info("Delete comment with id: " + komentarId);
 
-        System.out.println("Delete Comment with id " + komentarId + ".");
+        boolean deleted = komentarBean.deleteKomentar(komentarId);
 
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();

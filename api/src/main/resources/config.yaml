@@ -12,6 +12,9 @@ kumuluzee:
       connection-url: jdbc:postgresql://ep-ancient-fog-19741782-pooler.eu-central-1.aws.neon.tech/izletnik
       username: grzin
       password: ep2sMLqtu3rk
+  openapi-mp:
+    ui:
+      specification-server: http://localhost:8081
   health:
     checks:
       data-source-health-check:
