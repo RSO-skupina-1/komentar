@@ -9,7 +9,10 @@ public class KomentarConverter {
 
         Komentar dto = new Komentar();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 410ac78 (init)
         dto.setId(entity.getId());
 >>>>>>> parent of e9a4a0d (rollback)
         dto.setUstvarjen(entity.getUstvarjen());
