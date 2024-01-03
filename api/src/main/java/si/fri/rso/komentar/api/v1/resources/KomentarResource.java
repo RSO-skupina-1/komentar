@@ -22,6 +22,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+<<<<<<< HEAD
+=======
+import java.time.Instant;
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -108,6 +112,7 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
+<<<<<<< HEAD
     /*
     @Operation(description = "Add image metadata.", summary = "Add metadata")
     @APIResponses({
@@ -149,11 +154,67 @@ public class KomentarResource {
                                      @PathParam("komentarId") Integer imageMetadataId,
                                      @RequestBody(
                                              description = "DTO object with image metadata.",
+=======
+    @Operation(description = "Add new comment from given user to a destination.", summary = "Add comment")
+    @APIResponses({
+            @APIResponse(responseCode = "201",
+                    description = "Comment successfully added."
+            ),
+            @APIResponse(responseCode = "405", description = "Validation error .")
+    })
+    @Counted(name = "num_of_posted_comments")
+    @POST
+    public Response postKomentarByDestinacija(@RequestBody(description = "DTO object with comment metadata and text",
+                                                           required = true,
+                                                           content = @Content(
+                                                                   schema = @Schema(implementation = Komentar.class)
+                                                           )) Komentar komentar) {
+
+        System.out.println(komentar.getUstvarjen());
+
+        if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if(komentar.getUstvarjen() == null){
+            komentar.setUstvarjen(Instant.now());
+        }
+
+        System.out.println(komentar.getUstvarjen());
+
+        return Response.status(Response.Status.CONFLICT).entity(komentarBean.createKomentar(komentar)).build();
+    }
+
+    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Comment successfully updated."
+            )
+    })
+    @PUT
+    @Counted(name = "number_of_updated_comments")
+    @Path("{komentarId}")
+    public Response putImageMetadata(@Parameter(description = "Metadata ID.", required = true)
+                                     @PathParam("komentarId") Integer komentarId,
+                                     @RequestBody(
+                                             description = "DTO object with comment.",
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
                                              required = true, content = @Content(
                                              schema = @Schema(implementation = Komentar.class)))
                                      Komentar komentar){
 
+<<<<<<< HEAD
         komentar = komentarBean.putKomentar(imageMetadataId, komentar);
+=======
+        System.out.println(komentar.getKomentar());
+
+        if(komentar.getUstvarjen() == null){
+            komentar.setUstvarjen(Instant.now());
+        }
+
+        komentar = komentarBean.putKomentar(komentarId, komentar);
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
 
         if (komentar == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -163,6 +224,7 @@ public class KomentarResource {
 
     }
 
+<<<<<<< HEAD
     @Operation(description = "Delete metadata for an destinacija.", summary = "Delete metadata")
     @APIResponses({
             @APIResponse(
@@ -172,16 +234,36 @@ public class KomentarResource {
             @APIResponse(
                     responseCode = "404",
                     description = "Not found."
+=======
+    @Operation(description = "Delete comment with given id.", summary = "Delete comment")
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    description = "Comment successfully deleted."
+            ),
+            @APIResponse(
+                    responseCode = "404",
+                    description = "Comment not found."
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
             )
     })
     @DELETE
     @Counted(name = "number_of_deleted_comments")
     @Path("{komentarId}")
+<<<<<<< HEAD
     public Response deleteKomentar(@Parameter(description = "Metadata ID.", required = true)
+=======
+    public Response deleteKomentar(@Parameter(description = "Comment ID.", required = true)
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
                                         @PathParam("komentarId") Integer komentarId){
 
         boolean deleted = komentarBean.deleteKomentar(komentarId);
 
+<<<<<<< HEAD
+=======
+        System.out.println("Delete Comment with id " + komentarId + ".");
+
+>>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
