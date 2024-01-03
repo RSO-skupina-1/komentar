@@ -13,6 +13,7 @@ kumuluzee:
       username: grzin
       password: ep2sMLqtu3rk
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
   openapi-mp:
@@ -21,6 +22,11 @@ kumuluzee:
 =======
 >>>>>>> parent of aca6107 (popravljen openAPI)
 >>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
+=======
+  openapi-mp:
+    ui:
+      specification-server: http://localhost:8082
+>>>>>>> parent of 0fff523 (Revert "rollback")
   health:
     checks:
       data-source-health-check:
