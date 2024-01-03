@@ -1,13 +1,15 @@
-package si.fri.rso.komentar.models.converters;
+package si.fri.rso.priporocilni.models.converters;
 
-import si.fri.rso.komentar.lib.Komentar;
-import si.fri.rso.komentar.models.entities.KomentarEntity;
+import si.fri.rso.priporocilni.lib.Priporocilni;
+import si.fri.rso.priporocilni.lib.Priporocilni;
+import si.fri.rso.priporocilni.models.entities.PriporocilniEntity;
 
-public class KomentarConverter {
+public class PriporocilniConverter {
 
-    public static Komentar toDto(KomentarEntity entity) {
+    public static Priporocilni toDto(PriporocilniEntity entity) {
 
-        Komentar dto = new Komentar();
+        Priporocilni dto = new Priporocilni();
+        dto.setId(entity.getId());
         dto.setUstvarjen(entity.getUstvarjen());
         dto.setKomentar(entity.getKomentar());
         dto.setOcena(entity.getOcena());
@@ -15,13 +17,14 @@ public class KomentarConverter {
         dto.setUser_id(entity.getUser_id());
 
 
+
         return dto;
 
     }
 
-    public static KomentarEntity toEntity(Komentar dto) {
+    public static PriporocilniEntity toEntity(Priporocilni dto) {
 
-        KomentarEntity entity = new KomentarEntity();
+        PriporocilniEntity entity = new PriporocilniEntity();
         entity.setUstvarjen(dto.getUstvarjen());
         entity.setKomentar(dto.getKomentar());
         entity.setOcena(dto.getOcena());
