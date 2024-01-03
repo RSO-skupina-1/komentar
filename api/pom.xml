@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>priporocilni</artifactId>
+        <artifactId>komentar</artifactId>
         <groupId>si.fri.rso</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>priporocilni-api</artifactId>
+    <artifactId>komentar-api</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.kumuluz.ee</groupId>
@@ -36,25 +36,12 @@
 
         <dependency>
             <groupId>si.fri.rso</groupId>
-            <artifactId>priporocilni-services</artifactId>
+            <artifactId>komentar-services</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.kumuluz.ee.health</groupId>
             <artifactId>kumuluzee-health</artifactId>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
         </dependency>
 
     </dependencies>

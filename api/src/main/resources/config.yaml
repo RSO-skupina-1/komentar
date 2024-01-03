@@ -1,29 +1,26 @@
 kumuluzee:
-  name: priporocilni-service
+  name: komentar-service
   env:
     name: dev
   version: 1.0.0
   server:
-    base-url: http://localhost:8082
+    base-url: http://localhost:8081
     http:
-      port: 8082
+      port: 8081
   datasources:
-    - jndi-name: jdbc/PriporocilniDS
+    - jndi-name: jdbc/KomentarDS
       connection-url: jdbc:postgresql://ep-ancient-fog-19741782-pooler.eu-central-1.aws.neon.tech/izletnik
       username: grzin
       password: ep2sMLqtu3rk
-  openapi-mp:
-    ui:
-      specification-server: http://localhost:8082
   health:
     checks:
       data-source-health-check:
         type: liveness
-        jndi-name: jdbc/PriporocilniDS
+        jndi-name: jdbc/KomentarDS
   metrics:
     web-instrumentation:
       - name: destinacije-endpoint
-        url-pattern: /v1/priporocilni/*
+        url-pattern: /v1/komentar/*
 rest-properties:
   broken: false
 

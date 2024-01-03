@@ -4,10 +4,10 @@ RUN mkdir /app
 
 WORKDIR /app
 
-ADD ./api/target/priporocilni-api-1.0.0-SNAPSHOT.jar /app
+ADD ./api/target/komentar-api-1.0.0-SNAPSHOT.jar /app
 
 EXPOSE 8081
 
-CMD ["java", "-jar", "priporocilni-api-1.0.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "komentar-api-1.0.0-SNAPSHOT.jar"]
 #ENTRYPOINT ["java", "-jar", "image-catalog-api-1.0.0-SNAPSHOT.jar"]
 #CMD java -jar image-catalog-api-1.0.0-SNAPSHOT.jar

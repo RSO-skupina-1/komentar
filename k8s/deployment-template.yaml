@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: priporocilni-deployment
+  name: komentar-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: priporocilni
+      app: komentar
   template:
     metadata:
       labels:
-        app: priporocilni
+        app: komentar
     spec:
       containers:
-        - image: prelog/rso_priporocilni:2023-12-05-05-57-49
-          name: priporocilni
+        - image: prelog/rso_komentar:2023-12-05-05-57-49
+          name: komentar
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
               value: jdbc:postgresql://ep-ancient-fog-19741782-pooler.eu-central-1.aws.neon.tech/izletnik
@@ -47,12 +47,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: priporocilni-service
+  name: komentar-service
 spec:
   type: LoadBalancer
   ports:
-    - port: 8082
+    - port: 8081
       protocol: TCP
       targetPort: server
   selector:
-    app: priporocilni
+    app: komentar

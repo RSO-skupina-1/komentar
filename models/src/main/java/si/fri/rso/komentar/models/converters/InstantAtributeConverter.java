@@ -1,4 +1,4 @@
-package si.fri.rso.priporocilni.models.converters;
+package si.fri.rso.komentar.models.converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

@@ -1,6 +1,6 @@
-package si.fri.rso.priporocilni.api.v1.resources;
+package si.fri.rso.komentar.api.v1.resources;
 
-import si.fri.rso.priporocilni.services.config.RestProperties;
+import si.fri.rso.komentar.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

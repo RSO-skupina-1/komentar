@@ -1,4 +1,4 @@
-package si.fri.rso.priporocilni.services.producers;
+package si.fri.rso.komentar.services.producers;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Disposes;
@@ -9,7 +9,7 @@ import javax.persistence.PersistenceUnit;
 
 public class PersistenceProducer {
 
-    @PersistenceUnit(unitName = "priporocilni-jpa")
+    @PersistenceUnit(unitName = "komentar-jpa")
     private EntityManagerFactory emf;
 
     @Produces
