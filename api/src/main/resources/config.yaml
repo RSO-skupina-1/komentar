@@ -18,6 +18,7 @@ kumuluzee:
 <<<<<<< HEAD
   openapi-mp:
     ui:
+<<<<<<< HEAD
       specification-server: http://localhost:8082
 =======
 >>>>>>> parent of aca6107 (popravljen openAPI)
@@ -27,6 +28,9 @@ kumuluzee:
     ui:
       specification-server: http://localhost:8082
 >>>>>>> parent of 0fff523 (Revert "rollback")
+=======
+      specification-server: http://localhost:8081
+>>>>>>> parent of e9a4a0d (rollback)
   health:
     checks:
       data-source-health-check:
