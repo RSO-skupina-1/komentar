@@ -1,15 +1,12 @@
-package si.fri.rso.komentar.api.v1.resources;
+package si.fri.rso.priporocilni.api.v1.resources;
 
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
-import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
@@ -17,8 +14,8 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.json.JSONObject;
-import si.fri.rso.komentar.lib.Komentar;
-import si.fri.rso.komentar.services.beans.KomentarBean;
+import si.fri.rso.priporocilni.lib.Priporocilni;
+import si.fri.rso.priporocilni.services.beans.PriporocilniBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -35,15 +32,15 @@ import java.util.logging.Logger;
 
 
 @ApplicationScoped
-@Path("/komentar")
+@Path("/priporocilni")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class KomentarResource {
+public class PriporocilniResource {
 
-    private Logger log = Logger.getLogger(KomentarResource.class.getName());
+    private Logger log = Logger.getLogger(PriporocilniResource.class.getName());
 
     @Inject
-    private KomentarBean komentarBean;
+    private PriporocilniBean priporocilniBean;
 
 
     @Context
@@ -54,14 +51,14 @@ public class KomentarResource {
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "Array of comments",
-                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                    content = @Content(schema = @Schema(implementation = Priporocilni.class, type = SchemaType.ARRAY))
             )})
     @GET
     public Response getKomentar() {
         log.info("Get all comments.") ;
-        List<Komentar> komentar = komentarBean.getKomentarFilter(uriInfo);
+        List<Priporocilni> priporocilni = priporocilniBean.getKomentarFilter(uriInfo);
 
-        return Response.status(Response.Status.OK).entity(komentar).build();
+        return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
 
 
@@ -70,25 +67,25 @@ public class KomentarResource {
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen comment.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class))
+                            schema = @Schema(implementation = Priporocilni.class))
             ),
             @APIResponse(responseCode = "404",
                     description = "Comment with given ID doesn't exist.")
     })
     @GET
-    @Path("/{komentarId}")
+    @Path("/{priporocilniId}")
     public Response getKomentar(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("komentarId") Integer komentarId) {
+                                     @PathParam("priporocilniId") Integer priporocilniId) {
 
-        log.info("Get comment with id: " + komentarId);
+        log.info("Get comment with id: " + priporocilniId);
 
-        Komentar komentar = komentarBean.getKomentar(komentarId);
+        Priporocilni priporocilni = priporocilniBean.getKomentar(priporocilniId);
 
-        if (komentar == null) {
+        if (priporocilni == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.status(Response.Status.OK).entity(komentar).build();
+        return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
 
     @Operation(description = "Get comments by user ID.", summary = "Returns all comments posted by user with coresponding user ID.")
@@ -96,7 +93,7 @@ public class KomentarResource {
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen users comments.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                            schema = @Schema(implementation = Priporocilni.class, type = SchemaType.ARRAY))
             ),
             @APIResponse(responseCode = "404",
                     description = "User with given ID doesn't exist.")
@@ -108,20 +105,20 @@ public class KomentarResource {
 
         log.info("Get all comments posted by user with id: " + userId);
 
-        List<Komentar> komentar = komentarBean.getKomentarByUser(userId);
+        List<Priporocilni> priporocilni = priporocilniBean.getKomentarByUser(userId);
 
-        if (komentar == null || komentar.isEmpty()) {
+        if (priporocilni == null || priporocilni.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.status(Response.Status.OK).entity(komentar).build();
+        return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
     @Operation(description = "Get comments by destinacija ID.", summary = "Returns all comments posted under destinacija with coresponding destinacija ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen destinations comments.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                            schema = @Schema(implementation = Priporocilni.class, type = SchemaType.ARRAY))
             ),
             @APIResponse(responseCode = "404",
                     description = "Destinacija with given ID doesn't exist.")
@@ -133,13 +130,13 @@ public class KomentarResource {
 
         log.info("Get all comments posted under destination with id: " + destinacijaId);
 
-        List<Komentar> komentar = komentarBean.getKomentarByDestinacija(destinacijaId);
+        List<Priporocilni> priporocilni = priporocilniBean.getKomentarByDestinacija(destinacijaId);
 
-        if (komentar == null) {
+        if (priporocilni == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.status(Response.Status.OK).entity(komentar).build();
+        return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
 
 
@@ -148,7 +145,7 @@ public class KomentarResource {
             @APIResponse(responseCode = "201",
                     description = "Comment successfully added.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class)
+                            schema = @Schema(implementation = Priporocilni.class)
                     )
             ),
             @APIResponse(responseCode = "405",
@@ -159,20 +156,20 @@ public class KomentarResource {
     public Response postKomentarByDestinacija(@RequestBody(description = "DTO object with comment metadata and text",
                                                            required = true,
                                                            content = @Content(
-                                                                   schema = @Schema(implementation = Komentar.class)
-                                                           )) Komentar komentar) throws IOException {
+                                                                   schema = @Schema(implementation = Priporocilni.class)
+                                                           )) Priporocilni priporocilni) throws IOException {
 
         log.info("Post new comment.");
 
-        if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
+        if (priporocilni.getLokacija_id() == null || priporocilni.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        if(komentar.getUstvarjen() == null){
-            komentar.setUstvarjen(Instant.now());
+        if(priporocilni.getUstvarjen() == null){
+            priporocilni.setUstvarjen(Instant.now());
         }
 
-        String text = komentar.getKomentar();
+        String text = priporocilni.getKomentar();
         okhttp3.RequestBody body = okhttp3.RequestBody
                 .create(okhttp3.MediaType.get("application/x-www-form-urlencoded"), text);
 
@@ -189,11 +186,11 @@ public class KomentarResource {
 
         JSONObject jo = new JSONObject(response1.body().string());
 
-        komentar.setKomentar(jo.get("censored_content").toString());
+        priporocilni.setKomentar(jo.get("censored_content").toString());
 
         // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
         // bi bilo idealno za error prevention.
-        return Response.status(Response.Status.CREATED).entity(komentarBean.createKomentar(komentar)).build();
+        return Response.status(Response.Status.CREATED).entity(priporocilniBean.createKomentar(priporocilni)).build();
     }
 
     @Operation(description = "Update comment from user on destinacija.", summary = "Update comment with corresponding komentar ID.")
@@ -202,7 +199,7 @@ public class KomentarResource {
                     responseCode = "201",
                     description = "Comment successfully updated.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class)
+                            schema = @Schema(implementation = Priporocilni.class)
                     )
             ),
             @APIResponse(
@@ -212,28 +209,28 @@ public class KomentarResource {
             })
     @PUT
     @Counted(name = "number_of_updated_comments")
-    @Path("{komentarId}")
+    @Path("{priporocilniId}")
     public Response putImageMetadata(@Parameter(description = "Metadata ID.", required = true)
-                                     @PathParam("komentarId") Integer komentarId,
+                                     @PathParam("priporocilniId") Integer priporocilniId,
                                      @RequestBody(
                                              description = "DTO object with comment.",
                                              required = true, content = @Content(
-                                             schema = @Schema(implementation = Komentar.class)))
-                                     Komentar komentar) throws IOException{
+                                             schema = @Schema(implementation = Priporocilni.class)))
+                                     Priporocilni priporocilni) throws IOException{
 
         log.info("Update comment.");
 
-        if(komentar.getUstvarjen() == null){
-            komentar.setUstvarjen(Instant.now());
+        if(priporocilni.getUstvarjen() == null){
+            priporocilni.setUstvarjen(Instant.now());
         }
 
-        komentar = komentarBean.putKomentar(komentarId, komentar);
+        priporocilni = priporocilniBean.putKomentar(priporocilniId, priporocilni);
 
-        if (komentar == null) {
+        if (priporocilni == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        String text = komentar.getKomentar();
+        String text = priporocilni.getKomentar();
         okhttp3.RequestBody body = okhttp3.RequestBody
                 .create(okhttp3.MediaType.get("application/x-www-form-urlencoded"), text);
 
@@ -250,7 +247,7 @@ public class KomentarResource {
 
         JSONObject jo = new JSONObject(response1.body().string());
 
-        komentar.setKomentar(jo.get("censored_content").toString());
+        priporocilni.setKomentar(jo.get("censored_content").toString());
 
         return Response.status(Response.Status.CREATED).build();
 
@@ -269,13 +266,13 @@ public class KomentarResource {
     })
     @DELETE
     @Counted(name = "number_of_deleted_comments")
-    @Path("{komentarId}")
+    @Path("{priporocilniId}")
     public Response deleteKomentar(@Parameter(description = "Comment ID.", required = true)
-                                        @PathParam("komentarId") Integer komentarId){
+                                        @PathParam("priporocilniId") Integer priporocilniId){
 
-        log.info("Delete comment with id: " + komentarId);
+        log.info("Delete comment with id: " + priporocilniId);
 
-        boolean deleted = komentarBean.deleteKomentar(komentarId);
+        boolean deleted = priporocilniBean.deleteKomentar(priporocilniId);
 
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();

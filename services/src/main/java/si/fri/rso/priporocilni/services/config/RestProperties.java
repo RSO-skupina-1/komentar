@@ -1,4 +1,4 @@
-package si.fri.rso.komentar.services.config;
+package si.fri.rso.priporocilni.services.config;
 import javax.enterprise.context.ApplicationScoped;
 import com.kumuluz.ee.configuration.cdi.ConfigBundle;
 import com.kumuluz.ee.configuration.cdi.ConfigValue;

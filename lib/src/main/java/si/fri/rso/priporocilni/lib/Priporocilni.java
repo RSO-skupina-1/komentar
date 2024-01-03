@@ -1,8 +1,8 @@
-package si.fri.rso.komentar.lib;
+package si.fri.rso.priporocilni.lib;
 
 import java.time.Instant;
 
-public class Komentar {
+public class Priporocilni {
 
     /* same attributes as in Komentar Entity */
     private Integer id;
