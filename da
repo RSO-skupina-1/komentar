@@ -1,0 +1,18 @@
+[33m55149bd[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Revert "popravljen openAPI"
+[33m07a8cf3[m Merge branch 'main' of https://github.com/RSO-skupina-1/komentar
+[33m36f0d2a[m rollback2
+[33meb1268c[m Merge branch 'main' of https://github.com/RSO-skupina-1/komentar
+[33me9a4a0d[m rollback
+[33m666cfcd[m init
+[33m410ac78[m init
+[33maca6107[m popravljen openAPI
+[33m4cdb235[m dodan bad words api
+[33md1dc59e[m get now returns id
+[33m8221814[m Update KomentarResource.java
+[33m911e0d9[m added dummy values into init.sql
+[33md79e8e9[m Merge branch 'main' of https://github.com/RSO-skupina-1/komentar
+[33m28dfda2[m pravi port na dockerfile_with_maven_build
+[33m2659e19[m Update docker-image.yml to rso_komentar repo
+[33mf8d0dc9[m Create docker-image.yml
+[33m8a330dd[m dockerfile parvi port exposed
+[33mc737e6e[m init
