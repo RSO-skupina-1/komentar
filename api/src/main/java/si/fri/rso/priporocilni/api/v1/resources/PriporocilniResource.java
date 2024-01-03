@@ -47,17 +47,11 @@ public class PriporocilniResource {
     protected UriInfo uriInfo;
 
     @Counted(name = "get_all_komentar_count")
-    @Operation(description = "Get all comments.", summary = "Get all metadata")
+    @Operation(description = "Get all comments.", summary = "Returns all comments present in the database.")
     @APIResponses({
             @APIResponse(responseCode = "200",
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
                     description = "Array of comments",
                     content = @Content(schema = @Schema(implementation = Priporocilni.class, type = SchemaType.ARRAY))
-=======
-                    description = "List of comments",
-                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY)),
-                    headers = {@Header(name = "X-Total-Count", description = "Number of objects in list")}
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
             )})
     @GET
     public Response getKomentar() {
@@ -68,36 +62,24 @@ public class PriporocilniResource {
     }
 
 
-    @Operation(description = "Get metadata for a comment.", summary = "Get metadata for a comment")
+    @Operation(description = "Get comment by ID.", summary = "Returns comment with corresponding ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
-                    description = "Comments",
+                    description = "Successfully returns chosen comment.",
                     content = @Content(
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
                             schema = @Schema(implementation = Priporocilni.class))
             ),
             @APIResponse(responseCode = "404",
                     description = "Comment with given ID doesn't exist.")
     })
-=======
-                            schema = @Schema(implementation = Komentar.class))
-            )})
-
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
     @GET
     @Path("/{priporocilniId}")
     public Response getKomentar(@Parameter(description = "Metadata ID.", required = true)
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
                                      @PathParam("priporocilniId") Integer priporocilniId) {
 
         log.info("Get comment with id: " + priporocilniId);
 
         Priporocilni priporocilni = priporocilniBean.getKomentar(priporocilniId);
-=======
-                                     @PathParam("komentarId") Integer imageMetadataId) {
-
-        Komentar komentar = komentarBean.getKomentar(imageMetadataId);
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
 
         if (priporocilni == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -106,7 +88,6 @@ public class PriporocilniResource {
         return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
 
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
     @Operation(description = "Get comments by user ID.", summary = "Returns all comments posted by user with coresponding user ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
@@ -117,30 +98,21 @@ public class PriporocilniResource {
             @APIResponse(responseCode = "404",
                     description = "User with given ID doesn't exist.")
     })
-=======
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
     @GET
     @Path("user/{userId}")
     public Response getKomentarByUser(@Parameter(description = "User ID.", required = true)
                                  @PathParam("userId") Integer userId) {
 
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
         log.info("Get all comments posted by user with id: " + userId);
 
         List<Priporocilni> priporocilni = priporocilniBean.getKomentarByUser(userId);
 
         if (priporocilni == null || priporocilni.isEmpty()) {
-=======
-        List<Komentar> komentar = komentarBean.getKomentarByUser(userId);
-
-        if (komentar == null) {
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
         return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
     @Operation(description = "Get comments by destinacija ID.", summary = "Returns all comments posted under destinacija with coresponding destinacija ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
@@ -151,20 +123,14 @@ public class PriporocilniResource {
             @APIResponse(responseCode = "404",
                     description = "Destinacija with given ID doesn't exist.")
     })
-=======
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
     @GET
     @Path("destinacija/{destinacijaId}")
     public Response getKomentarByDestinacija(@Parameter(description = "Destinacija ID.", required = true)
                                  @PathParam("destinacijaId") Integer destinacijaId) {
 
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
         log.info("Get all comments posted under destination with id: " + destinacijaId);
 
         List<Priporocilni> priporocilni = priporocilniBean.getKomentarByDestinacija(destinacijaId);
-=======
-        List<Komentar> komentar = komentarBean.getKomentarByDestinacija(destinacijaId);
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
 
         if (priporocilni == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -173,19 +139,17 @@ public class PriporocilniResource {
         return Response.status(Response.Status.OK).entity(priporocilni).build();
     }
 
+
     @Operation(description = "Add new comment from given user to a destination.", summary = "Add comment")
     @APIResponses({
             @APIResponse(responseCode = "201",
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
                     description = "Comment successfully added.",
                     content = @Content(
                             schema = @Schema(implementation = Priporocilni.class)
                     )
-=======
-                    description = "Comment successfully added."
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
             ),
-            @APIResponse(responseCode = "405", description = "Validation error .")
+            @APIResponse(responseCode = "405",
+                        description = "Either user ID or destinacija ID was not given")
     })
     @Counted(name = "num_of_posted_comments")
     @POST
@@ -195,6 +159,7 @@ public class PriporocilniResource {
                                                                    schema = @Schema(implementation = Priporocilni.class)
                                                            )) Priporocilni priporocilni) throws IOException {
 
+        log.info("Post new comment.");
 
         if (priporocilni.getLokacija_id() == null || priporocilni.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -225,17 +190,12 @@ public class PriporocilniResource {
 
         // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
         // bi bilo idealno za error prevention.
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
         return Response.status(Response.Status.CREATED).entity(priporocilniBean.createKomentar(priporocilni)).build();
-=======
-        return Response.status(Response.Status.CONFLICT).entity(komentarBean.createKomentar(komentar)).build();
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
     }
 
-    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment")
+    @Operation(description = "Update comment from user on destinacija.", summary = "Update comment with corresponding komentar ID.")
     @APIResponses({
             @APIResponse(
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
                     responseCode = "201",
                     description = "Comment successfully updated.",
                     content = @Content(
@@ -245,12 +205,8 @@ public class PriporocilniResource {
             @APIResponse(
                     responseCode = "404",
                     description = "Comment with given komentar ID was not found, hence cannot be updated."
-=======
-                    responseCode = "200",
-                    description = "Comment successfully updated."
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
             )
-    })
+            })
     @PUT
     @Counted(name = "number_of_updated_comments")
     @Path("{priporocilniId}")
@@ -262,7 +218,7 @@ public class PriporocilniResource {
                                              schema = @Schema(implementation = Priporocilni.class)))
                                      Priporocilni priporocilni) throws IOException{
 
-        System.out.println(komentar.getKomentar());
+        log.info("Update comment.");
 
         if(priporocilni.getUstvarjen() == null){
             priporocilni.setUstvarjen(Instant.now());
@@ -293,19 +249,19 @@ public class PriporocilniResource {
 
         priporocilni.setKomentar(jo.get("censored_content").toString());
 
-        return Response.status(Response.Status.NOT_MODIFIED).build();
+        return Response.status(Response.Status.CREATED).build();
 
     }
 
-    @Operation(description = "Delete comment with given id.", summary = "Delete comment")
+    @Operation(description = "Delete comment with given id.", summary = "Delete comment with corresponding komentar ID.")
     @APIResponses({
             @APIResponse(
-                    responseCode = "200",
+                    responseCode = "204",
                     description = "Comment successfully deleted."
             ),
             @APIResponse(
                     responseCode = "404",
-                    description = "Comment not found."
+                    description = "Comment with given comment ID was not found."
             )
     })
     @DELETE
@@ -314,15 +270,9 @@ public class PriporocilniResource {
     public Response deleteKomentar(@Parameter(description = "Comment ID.", required = true)
                                         @PathParam("priporocilniId") Integer priporocilniId){
 
-<<<<<<< HEAD:api/src/main/java/si/fri/rso/priporocilni/api/v1/resources/PriporocilniResource.java
         log.info("Delete comment with id: " + priporocilniId);
 
         boolean deleted = priporocilniBean.deleteKomentar(priporocilniId);
-=======
-        boolean deleted = komentarBean.deleteKomentar(komentarId);
->>>>>>> parent of aca6107 (popravljen openAPI):api/src/main/java/si/fri/rso/komentar/api/v1/resources/KomentarResource.java
-
-        System.out.println("Delete Comment with id " + komentarId + ".");
 
         if (deleted) {
             return Response.status(Response.Status.NO_CONTENT).build();
