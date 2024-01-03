@@ -193,8 +193,6 @@ public class KomentarResource {
 
         // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
         // bi bilo idealno za error prevention.
-        // nov komentar, da lahko commitam
-        
         return Response.status(Response.Status.CREATED).entity(komentarBean.createKomentar(komentar)).build();
     }
 
