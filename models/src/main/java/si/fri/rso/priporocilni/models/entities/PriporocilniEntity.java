@@ -1,25 +1,25 @@
-package si.fri.rso.komentar.models.entities;
+package si.fri.rso.priporocilni.models.entities;
 
 import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "komentar_metadata")
+@Table(name = "priporocilni_metadata")
 @NamedQueries(value =
         {
-                @NamedQuery(name = "KomentarEntity.getAll",
-                        query = "SELECT kd FROM KomentarEntity kd"),
-                @NamedQuery(name = "KomentarEntity.getByUserId",
-                        query = "SELECT kd FROM KomentarEntity kd WHERE kd.user_id = " +
+                @NamedQuery(name = "PriporocilniEntity.getAll",
+                        query = "SELECT kd FROM PriporocilniEntity kd"),
+                @NamedQuery(name = "PriporocilniEntity.getByUserId",
+                        query = "SELECT kd FROM PriporocilniEntity kd WHERE kd.user_id = " +
                                 ":user_id"),
-                @NamedQuery(name = "KomentarEntity.getByLokacijaId",
-                        query = "SELECT kd FROM KomentarEntity kd WHERE kd.lokacija_id = " +
+                @NamedQuery(name = "PriporocilniEntity.getByLokacijaId",
+                        query = "SELECT kd FROM PriporocilniEntity kd WHERE kd.lokacija_id = " +
                                 ":lokacija_id")
         })
 
 
 
-public class KomentarEntity {
+public class PriporocilniEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

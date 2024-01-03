@@ -1,9 +1,9 @@
-package si.fri.rso.komentar.api.v1.health;
+package si.fri.rso.priporocilni.api.v1.health;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
-import si.fri.rso.komentar.services.config.RestProperties;
+import si.fri.rso.priporocilni.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
