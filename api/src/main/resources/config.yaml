@@ -12,29 +12,9 @@ kumuluzee:
       connection-url: jdbc:postgresql://ep-ancient-fog-19741782-pooler.eu-central-1.aws.neon.tech/izletnik
       username: grzin
       password: ep2sMLqtu3rk
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
   openapi-mp:
     ui:
-<<<<<<< HEAD
-      specification-server: http://localhost:8082
-=======
->>>>>>> parent of aca6107 (popravljen openAPI)
->>>>>>> parent of 8446cdb (Revert "Revert "rollback"")
-=======
-  openapi-mp:
-    ui:
-<<<<<<< HEAD
-      specification-server: http://localhost:8082
->>>>>>> parent of 0fff523 (Revert "rollback")
-=======
       specification-server: http://localhost:8081
->>>>>>> parent of e9a4a0d (rollback)
-=======
-      specification-server: http://localhost:8081
->>>>>>> parent of 410ac78 (init)
   health:
     checks:
       data-source-health-check:
