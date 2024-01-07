@@ -1,6 +1,7 @@
 package si.fri.rso.komentar.api.v1.resources;
 
 
+import com.kumuluz.ee.logs.cdi.Log;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
-
+@Log
 @ApplicationScoped
 @Path("/komentar")
 @Produces(MediaType.APPLICATION_JSON)
@@ -255,23 +256,32 @@ public class KomentarResource {
         }
 
         String text = komentar.getKomentar();
-        okhttp3.RequestBody body = okhttp3.RequestBody
-                .create(okhttp3.MediaType.get("application/x-www-form-urlencoded"), text);
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
+        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, text);
 
         Request request = new Request.Builder()
                 .url("https://api.apilayer.com/bad_words?censor_character=*")
                 .addHeader("apiKey", "VC7y8FdT1gEcdGuoOTZBWSBPN05mq4ds")
-                .post(body)
+                .method("POST", body)
                 .build();
 
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
 
-        Call call = client.newCall(request);
-        okhttp3.Response response1 = call.execute();
+        okhttp3.Response response = client.newCall(request).execute();
+        if (response.body() != null){
+            String s = response.body().string();
 
-        JSONObject jo = new JSONObject(response1.body().string());
+            String[] split = s.split("\"");
+            int i = 0;
+            for (i = 0; i < split.length; i++) {
+                if (split[i].contains("censored_content")) {
+                    break;
+                }
+            }
+            komentar.setKomentar(split[i + 2]);
 
-        komentar.setKomentar(jo.get("censored_content").toString());
+        }
+        log.info("Komentar text: " + komentar.getKomentar());
 
         // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
         // bi bilo idealno za error prevention.
