@@ -54,7 +54,24 @@ public class KomentarResource {
     @APIResponses({
             @APIResponse(responseCode = "200",
                     description = "Array of comments",
-                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                    content = @Content(schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY, example = """
+                            [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "destinacija_id": 1,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "destinacija_id": 2,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                }]"""))
             )})
     @GET
     public Response getKomentar() {
@@ -70,7 +87,15 @@ public class KomentarResource {
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen comment.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class))
+                            schema = @Schema(implementation = Komentar.class, example = """
+                            {
+                                "id": 1,
+                                "user_id": 1,
+                                "destinacija_id": 1,
+                                "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                "ocena": 5,
+                                "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                            }"""))
             ),
             @APIResponse(responseCode = "404",
                     description = "Comment with given ID doesn't exist.")
@@ -96,7 +121,24 @@ public class KomentarResource {
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen users comments.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY, example = """
+                            [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "destinacija_id": 1,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "destinacija_id": 2,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                }]"""))
             ),
             @APIResponse(responseCode = "404",
                     description = "User with given ID doesn't exist.")
@@ -121,7 +163,24 @@ public class KomentarResource {
             @APIResponse(responseCode = "200",
                     description = "Successfully returns chosen destinations comments.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY))
+                            schema = @Schema(implementation = Komentar.class, type = SchemaType.ARRAY, example = """
+                            [
+                                {
+                                    "id": 1,
+                                    "user_id": 1,
+                                    "destinacija_id": 1,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                },
+                                {
+                                    "id": 2,
+                                    "user_id": 2,
+                                    "destinacija_id": 2,
+                                    "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                    "ocena": 5,
+                                    "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                }]"""))
             ),
             @APIResponse(responseCode = "404",
                     description = "Destinacija with given ID doesn't exist.")
@@ -144,11 +203,34 @@ public class KomentarResource {
 
 
     @Operation(description = "Add new comment from given user to a destination.", summary = "Add comment")
+    @RequestBody(
+            description = "DTO object with comment metadata and text",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = Komentar.class, example = """
+                                                                                    {
+                                                                                        "id": 1,
+                                                                                        "user_id": 1,
+                                                                                        "destinacija_id": 1,
+                                                                                        "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                                                                        "ocena": 5,
+                                                                                        "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                                                                    }""")
+            )
+    )
     @APIResponses({
             @APIResponse(responseCode = "201",
                     description = "Comment successfully added.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class)
+                            schema = @Schema(implementation = Komentar.class, example = """
+                            {
+                                "id": 1,
+                                "user_id": 1,
+                                "destinacija_id": 1,
+                                "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                "ocena": 5,
+                                "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                            }""")
                     )
             ),
             @APIResponse(responseCode = "405",
@@ -197,12 +279,35 @@ public class KomentarResource {
     }
 
     @Operation(description = "Update comment from user on destinacija.", summary = "Update comment with corresponding komentar ID.")
+    @RequestBody(
+            description = "DTO object with comment metadata and text",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = Komentar.class, example = """
+                                                                                    {
+                                                                                        "id": 1,
+                                                                                        "user_id": 1,
+                                                                                        "destinacija_id": 1,
+                                                                                        "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                                                                        "ocena": 5,
+                                                                                        "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                                                                                    }""")
+            )
+    )
     @APIResponses({
             @APIResponse(
                     responseCode = "201",
                     description = "Comment successfully updated.",
                     content = @Content(
-                            schema = @Schema(implementation = Komentar.class)
+                            schema = @Schema(implementation = Komentar.class, example = """
+                            {
+                                "id": 1,
+                                "user_id": 1,
+                                "destinacija_id": 1,
+                                "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
+                                "ocena": 5,
+                                "ustvarjen": "2021-01-01T00:00:00.000+00:00"
+                            }""")
                     )
             ),
             @APIResponse(
