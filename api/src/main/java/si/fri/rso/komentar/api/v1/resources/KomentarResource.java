@@ -1,6 +1,7 @@
 package si.fri.rso.komentar.api.v1.resources;
 
 
+import com.kumuluz.ee.cors.annotations.CrossOrigin;
 import com.kumuluz.ee.logs.cdi.Log;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -8,6 +9,7 @@ import okhttp3.Request;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
@@ -39,6 +41,7 @@ import java.util.logging.Logger;
 @Path("/komentar")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@CrossOrigin(name = "komentar", allowOrigin = "*")
 public class KomentarResource {
 
     private Logger log = Logger.getLogger(KomentarResource.class.getName());
@@ -82,7 +85,7 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
-
+    @Counted(name = "get_komentar_by_komentarId_count")
     @Operation(description = "Get comment by ID.", summary = "Returns comment with corresponding ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
@@ -117,6 +120,7 @@ public class KomentarResource {
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
 
+    @Counted(name = "get_komentar_by_userId_count")
     @Operation(description = "Get comments by user ID.", summary = "Returns all comments posted by user with coresponding user ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
@@ -159,6 +163,8 @@ public class KomentarResource {
 
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
+
+    @Counted(name = "get_komentar_by_destinacijaId_count")
     @Operation(description = "Get comments by destinacija ID.", summary = "Returns all comments posted under destinacija with coresponding destinacija ID.")
     @APIResponses({
             @APIResponse(responseCode = "200",
@@ -238,6 +244,7 @@ public class KomentarResource {
                         description = "Either user ID or destinacija ID was not given")
     })
     @Counted(name = "num_of_posted_comments")
+    @Timed(name = "Comment_post_time")
     @POST
     public Response postKomentarByDestinacija(@RequestBody(description = "DTO object with comment metadata and text",
                                                            required = true,
@@ -266,20 +273,25 @@ public class KomentarResource {
                 .method("POST", body)
                 .build();
 
+        try{
+            okhttp3.Response response = client.newCall(request).execute();
+            if (response.body() != null){
+                String s = response.body().string();
 
-        okhttp3.Response response = client.newCall(request).execute();
-        if (response.body() != null){
-            String s = response.body().string();
-
-            String[] split = s.split("\"");
-            int i = 0;
-            for (i = 0; i < split.length; i++) {
-                if (split[i].contains("censored_content")) {
-                    break;
+                String[] split = s.split("\"");
+                int i = 0;
+                for (i = 0; i < split.length; i++) {
+                    if (split[i].contains("censored_content")) {
+                        break;
+                    }
                 }
-            }
-            komentar.setKomentar(split[i + 2]);
+                komentar.setKomentar(split[i + 2]);
 
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.warning(e.getMessage());
         }
         log.info("Komentar text: " + komentar.getKomentar());
 
@@ -307,18 +319,7 @@ public class KomentarResource {
     @APIResponses({
             @APIResponse(
                     responseCode = "201",
-                    description = "Comment successfully updated.",
-                    content = @Content(
-                            schema = @Schema(implementation = Komentar.class, example = """
-                            {
-                                "id": 1,
-                                "user_id": 1,
-                                "destinacija_id": 1,
-                                "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
-                                "ocena": 5,
-                                "ustvarjen": "2021-01-01T00:00:00.000+00:00"
-                            }""")
-                    )
+                    description = "Comment successfully updated."
             ),
             @APIResponse(
                     responseCode = "404",
@@ -327,6 +328,7 @@ public class KomentarResource {
             })
     @PUT
     @Counted(name = "number_of_updated_comments")
+    @Timed(name = "Comment_update_time")
     @Path("{komentarId}")
     public Response putImageMetadata(@Parameter(description = "Metadata ID.", required = true)
                                      @PathParam("komentarId") Integer komentarId,
@@ -399,9 +401,4 @@ public class KomentarResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
-
-
-
-
-
 }

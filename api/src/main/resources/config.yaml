@@ -13,6 +13,10 @@ kumuluzee:
       username: grzin
       password: ep2sMLqtu3rk
   openapi-mp:
+    enabled: true
+    scan:
+      packages:
+        - si.fri.rso.komentar.api
     ui:
       specification-server: http://localhost:8081
   health:
@@ -42,8 +46,19 @@ kumuluzee:
                             </Configuration>'
   metrics:
     web-instrumentation:
-      - name: destinacije-endpoint
-        url-pattern: /v1/komentar/*
+      - name: metrics-endpoint
+        url-pattern: /metrics/*
+        status-code: "200, 500"
+      - name: prometheus-endpoint
+        url-pattern: /prometheus/*
+  cors:
+    enabled: true
+    paths: "/*"
+    allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+    allowed-headers: "*"
+    allowed-origins: "*"
+    max-age: 3600
+    credentials: false
 rest-properties:
   broken: false
 
