@@ -80,7 +80,7 @@ public class KomentarResource {
     @GET
     public Response getKomentar() {
         log.info("Get all comments.") ;
-        List<Komentar> komentar = komentarBean.getKomentarFilter(uriInfo);
+        List<Komentar> komentar = komentarBean.getKomentar();
 
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
@@ -106,7 +106,7 @@ public class KomentarResource {
     })
     @GET
     @Path("/{komentarId}")
-    public Response getKomentar(@Parameter(description = "Metadata ID.", required = true)
+    public Response getKomentarById(@Parameter(description = "Metadata ID.", required = true)
                                      @PathParam("komentarId") Integer komentarId) {
 
         log.info("Get comment with id: " + komentarId);
