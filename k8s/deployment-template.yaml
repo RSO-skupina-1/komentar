@@ -13,7 +13,7 @@ spec:
         app: komentar
     spec:
       containers:
-        - image: prelog/rso_komentar:2023-12-05-05-57-49
+        - image: prelog/rso_komentar:2024-01-11-10-58-52
           name: komentar
           env:
             - name: KUMULUZEE_DATASOURCES0_CONNECTIONURL
@@ -21,11 +21,11 @@ spec:
             - name: KUMULUZEE_DATASOURCES0_USERNAME
               value: grzin
             - name: KUMULUZEE_DATASOURCES0_PASSWORD
-              value: ep2sMLqtu3rk
-              #valueFrom: #use Kubernetes secret for storing the password
-                #secretKeyRef:
-                  #name: #to be added
-                  #key: #to be added
+              #value: ep2sMLqtu3rk
+              valueFrom: #use Kubernetes secret for storing the password
+                secretKeyRef:
+                  name: domen-neon
+                  key: password
           ports:
             - containerPort: 8081
               name: server
@@ -49,10 +49,9 @@ kind: Service
 metadata:
   name: komentar-service
 spec:
-  type: LoadBalancer
   ports:
-    - port: 8081
+    - port: 80
       protocol: TCP
-      targetPort: server
+      targetPort: 8081
   selector:
     app: komentar
