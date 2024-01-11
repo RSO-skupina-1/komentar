@@ -14,10 +14,13 @@ kumuluzee:
       password: ep2sMLqtu3rk
   openapi-mp:
     enabled: true
+    servlet:
+      mapping: /v1/priporocilni/openapi
     scan:
       packages:
         - si.fri.rso.komentar.api
     ui:
+      mapping: /v1/priporocilni/api-specs/ui
       specification-server: http://localhost:8081
   health:
     checks:
