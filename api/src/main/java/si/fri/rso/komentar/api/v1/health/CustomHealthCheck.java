@@ -14,7 +14,7 @@ public class CustomHealthCheck implements HealthCheck {
 
     @Inject
     private RestProperties restProperties;
-
+    
     @Override
     public HealthCheckResponse call() {
         if (restProperties.getBroken()) {

@@ -6,7 +6,6 @@ import com.kumuluz.ee.logs.cdi.Log;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.metrics.annotation.Timed;
@@ -22,6 +21,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.json.JSONObject;
 import si.fri.rso.komentar.lib.Komentar;
 import si.fri.rso.komentar.services.beans.KomentarBean;
+import si.fri.rso.komentar.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -49,9 +49,14 @@ public class KomentarResource {
     @Inject
     private KomentarBean komentarBean;
 
+    @Inject
+    private RestProperties restProperties;
+
 
     @Context
     protected UriInfo uriInfo;
+
+    private int retryCounter = 0;
 
     @Counted(name = "get_all_komentar_count")
     @Operation(description = "Get all comments.", summary = "Returns all comments present in the database.")
@@ -63,7 +68,7 @@ public class KomentarResource {
                                 {
                                     "id": 1,
                                     "user_id": 1,
-                                    "destinacija_id": 1,
+                                    "lokacija_id": 1,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -71,7 +76,7 @@ public class KomentarResource {
                                 {
                                     "id": 2,
                                     "user_id": 2,
-                                    "destinacija_id": 2,
+                                    "lokacija_id": 2,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -95,7 +100,7 @@ public class KomentarResource {
                             {
                                 "id": 1,
                                 "user_id": 1,
-                                "destinacija_id": 1,
+                                "lokacija_id": 1,
                                 "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                 "ocena": 5,
                                 "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -131,7 +136,7 @@ public class KomentarResource {
                                 {
                                     "id": 1,
                                     "user_id": 1,
-                                    "destinacija_id": 1,
+                                    "lokacija_id": 1,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -139,7 +144,7 @@ public class KomentarResource {
                                 {
                                     "id": 2,
                                     "user_id": 2,
-                                    "destinacija_id": 2,
+                                    "lokacija_id": 2,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -175,7 +180,7 @@ public class KomentarResource {
                                 {
                                     "id": 1,
                                     "user_id": 1,
-                                    "destinacija_id": 1,
+                                    "lokacija_id": 1,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -183,7 +188,7 @@ public class KomentarResource {
                                 {
                                     "id": 2,
                                     "user_id": 2,
-                                    "destinacija_id": 2,
+                                    "lokacija_id": 2,
                                     "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                     "ocena": 5,
                                     "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -218,7 +223,7 @@ public class KomentarResource {
                                                                                     {
                                                                                         "id": 1,
                                                                                         "user_id": 1,
-                                                                                        "destinacija_id": 1,
+                                                                                        "lokacija_id": 1,
                                                                                         "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                                                                         "ocena": 5,
                                                                                         "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -233,7 +238,7 @@ public class KomentarResource {
                             {
                                 "id": 1,
                                 "user_id": 1,
-                                "destinacija_id": 1,
+                                "lokacija_id": 1,
                                 "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                 "ocena": 5,
                                 "ustvarjen": "2021-01-01T00:00:00.000+00:00"
@@ -252,7 +257,6 @@ public class KomentarResource {
                                                                    schema = @Schema(implementation = Komentar.class)
                                                            )) Komentar komentar) throws IOException {
 
-        log.info("Post new comment.");
 
         if (komentar.getLokacija_id() == null || komentar.getUser_id() == null){
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -262,41 +266,6 @@ public class KomentarResource {
             komentar.setUstvarjen(Instant.now());
         }
 
-        String text = komentar.getKomentar();
-        OkHttpClient client = new OkHttpClient().newBuilder().build();
-        okhttp3.MediaType mediaType = okhttp3.MediaType.parse("text/plain");
-        okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, text);
-
-        Request request = new Request.Builder()
-                .url("https://api.apilayer.com/bad_words?censor_character=*")
-                .addHeader("apiKey", "VC7y8FdT1gEcdGuoOTZBWSBPN05mq4ds")
-                .method("POST", body)
-                .build();
-
-        try{
-            okhttp3.Response response = client.newCall(request).execute();
-            if (response.body() != null){
-                String s = response.body().string();
-
-                String[] split = s.split("\"");
-                int i = 0;
-                for (i = 0; i < split.length; i++) {
-                    if (split[i].contains("censored_content")) {
-                        break;
-                    }
-                }
-                komentar.setKomentar(split[i + 2]);
-
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.warning(e.getMessage());
-        }
-        log.info("Komentar text: " + komentar.getKomentar());
-
-        // kdaj dobim exception Internal Exception: org.postgresql.util.PSQLException: ERROR: prepared statement "S_2" already exists
-        // bi bilo idealno za error prevention.
         return Response.status(Response.Status.CREATED).entity(komentarBean.createKomentar(komentar)).build();
     }
 
@@ -309,7 +278,7 @@ public class KomentarResource {
                                                                                     {
                                                                                         "id": 1,
                                                                                         "user_id": 1,
-                                                                                        "destinacija_id": 1,
+                                                                                        "lokacija_id": 1,
                                                                                         "komentar": "Priljubljeno mesto za potovanje, toplo priporočam!",
                                                                                         "ocena": 5,
                                                                                         "ustvarjen": "2021-01-01T00:00:00.000+00:00"

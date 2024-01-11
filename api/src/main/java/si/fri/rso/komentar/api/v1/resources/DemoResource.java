@@ -4,16 +4,13 @@ import si.fri.rso.komentar.services.config.RestProperties;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@Path("/demo")
+@Path("komentar/config")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class DemoResource {
@@ -23,11 +20,33 @@ public class DemoResource {
     @Inject
     private RestProperties restProperties;
 
+    @GET
+    public Response isHealthy() {
+
+        if (restProperties.getBroken()) {
+            return Response.status(Response.Status.SERVICE_UNAVAILABLE).build();
+        }
+
+        return Response.status(Response.Status.OK).build();
+    }
+
     @POST
     @Path("break")
     public Response makeUnhealthy() {
 
+        log.warning("Setting service to unavailable!");
         restProperties.setBroken(true);
+
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Path("fix")
+    public Response makeHealthy() {
+
+        log.info("Setting service to available!");
+
+        restProperties.setBroken(false);
 
         return Response.status(Response.Status.OK).build();
     }
