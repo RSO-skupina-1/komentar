@@ -48,12 +48,9 @@ kumuluzee:
                                 </Loggers>
                             </Configuration>'
   metrics:
-    web-instrumentation:
-      - name: metrics-endpoint
-        url-pattern: /metrics/*
-        status-code: "200, 500"
-      - name: prometheus-endpoint
-        url-pattern: /prometheus/*
+    servlet:
+      enabled: true
+      mapping: /v1/komentar/metrics
   cors:
     enabled: true
     paths: "/*"
