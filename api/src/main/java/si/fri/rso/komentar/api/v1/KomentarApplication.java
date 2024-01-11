@@ -15,6 +15,6 @@ import org.eclipse.microprofile.openapi.annotations.servers.Server;
         license = @License(name = "dev"), description = "API for managing comments."),
         servers = @Server(url = "http://localhost:8081/"))
 @ApplicationPath("/v1")
-public class KomentarApplication extends Application {
+public class    KomentarApplication extends Application {
 
 }
