@@ -4,15 +4,11 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -22,10 +18,6 @@ import com.kumuluz.ee.rest.utils.JPAUtils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
-import org.eclipse.microprofile.faulttolerance.Fallback;
-import org.eclipse.microprofile.faulttolerance.Retry;
-import org.eclipse.microprofile.faulttolerance.Timeout;
 import si.fri.rso.komentar.lib.Komentar;
 import si.fri.rso.komentar.models.converters.KomentarConverter;
 import si.fri.rso.komentar.models.entities.KomentarEntity;
@@ -55,7 +47,7 @@ public class KomentarBean {
         client = new OkHttpClient().newBuilder().build();
     }
 
-    public List<Komentar> getKomentar() {
+    public List<Komentar> getKomentarById() {
 
         TypedQuery<KomentarEntity> query = em.createNamedQuery(
                 "KomentarEntity.getAll", KomentarEntity.class);
@@ -75,7 +67,7 @@ public class KomentarBean {
                 .map(KomentarConverter::toDto).collect(Collectors.toList());
     }
 
-    public Komentar getKomentar(Integer id) {
+    public Komentar getKomentarById(Integer id) {
 
         KomentarEntity komentarEntity = em.find(KomentarEntity.class, id);
 

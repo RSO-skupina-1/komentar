@@ -7,11 +7,9 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.eclipse.microprofile.metrics.annotation.Counted;
-import org.eclipse.microprofile.metrics.annotation.Gauge;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
-import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
@@ -85,7 +83,7 @@ public class KomentarResource {
     @GET
     public Response getKomentar() {
         log.info("Get all comments.") ;
-        List<Komentar> komentar = komentarBean.getKomentar();
+        List<Komentar> komentar = komentarBean.getKomentarById();
 
         return Response.status(Response.Status.OK).entity(komentar).build();
     }
@@ -116,7 +114,7 @@ public class KomentarResource {
 
         log.info("Get comment with id: " + komentarId);
 
-        Komentar komentar = komentarBean.getKomentar(komentarId);
+        Komentar komentar = komentarBean.getKomentarById(komentarId);
 
         if (komentar == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
